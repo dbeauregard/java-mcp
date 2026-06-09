@@ -3,6 +3,10 @@ plugins {
     id 'application'
 }
 
+ext {
+    mcpVersion = "1.1.3"
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
@@ -18,11 +22,13 @@ application {
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation libs.junit
-
-    // This dependency is used by the application.
-    implementation libs.guava
-    implementation platform("io.modelcontextprotocol.sdk:mcp-bom:0.12.1")
-    implementation 'io.modelcontextprotocol.sdk:mcp'
+    implementation platform("io.modelcontextprotocol.sdk:mcp-bom:${mcpVersion}")
+    implementation platform("org.apache.logging.log4j:log4j-bom:2.25.1")
+    implementation "io.modelcontextprotocol.sdk:mcp"
+    implementation "org.slf4j:slf4j-api:2.0.17"
+    implementation "org.apache.logging.log4j:log4j-api"
+    implementation "org.apache.logging.log4j:log4j-core"
+    runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl"
+    testImplementation "io.modelcontextprotocol.sdk:mcp-test"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
