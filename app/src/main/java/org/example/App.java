@@ -76,23 +76,7 @@ public class App {
 
     private SyncToolSpecification createToolSpec() {
 
-        JsonSchema inputSchema = new JsonSchema(
-                "object",
-                Map.of(
-                        "operation", Map.of(
-                                "type", "string",
-                                "description", "The arithmetic operation to perform",
-                                "enum", List.of("add", "subtract", "multiply", "divide")),
-                        "a", Map.of(
-                                "type", "integer",
-                                "description", "The first operand"),
-                        "b", Map.of(
-                                "type", "integer",
-                                "description", "The second operand")),
-                List.of("operation", "a", "b"),
-                false,
-                null,
-                null);
+        JsonSchema inputSchema = generateInputSchema();
 
         SyncToolSpecification syncToolSpecification = SyncToolSpecification.builder()
                 .tool(Tool.builder()
@@ -116,27 +100,48 @@ public class App {
         return syncToolSpecification;
     }
 
+    private JsonSchema generateInputSchema() {
+        JsonSchema inputSchema = new JsonSchema(
+                "object",
+                Map.of(
+                        "operation", Map.of(
+                                "type", "string",
+                                "description", "The arithmetic operation to perform",
+                                "enum", List.of("add", "subtract", "multiply", "divide")),
+                        "a", Map.of(
+                                "type", "integer",
+                                "description", "The first operand"),
+                        "b", Map.of(
+                                "type", "integer",
+                                "description", "The second operand")),
+                List.of("operation", "a", "b"),
+                false,
+                null,
+                null);
+        return inputSchema;
+    }
+
     private String getResult(String operation, int a, int b) {
-    return switch (operation.toLowerCase()) {
-        case "add"      -> String.valueOf(a + b);
-        case "subtract" -> String.valueOf(a - b);
-        case "multiply" -> String.valueOf(a * b);
-        case "divide"   -> b == 0 ? "Error: Division by zero" : String.valueOf(a / b);
-        default         -> "Error: Invalid operation";
-    };
-}
+        return switch (operation.toLowerCase()) {
+            case "add" -> String.valueOf(a + b);
+            case "subtract" -> String.valueOf(a - b);
+            case "multiply" -> String.valueOf(a * b);
+            case "divide" -> b == 0 ? "Error: Division by zero" : String.valueOf(a / b);
+            default -> "Error: Invalid operation";
+        };
+    }
 
     private SyncResourceSpecification createResourceSpec() {
         SyncResourceSpecification syncResourceSpecification = new McpServerFeatures.SyncResourceSpecification(
                 Resource.builder()
-                        .uri("custom://resource")
-                        .name("name")
-                        .description("description")
+                        .uri("custom://brand")
+                        .name("brand")
+                        .description("calculator brand")
                         .mimeType("text/plain")
                         .build(),
                 (exchange, request) -> {
                     // Resource read implementation
-                    return new ReadResourceResult(null);
+                    return new ReadResourceResult(List.of(new McpSchema.TextResourceContents("custom://resource", "text/plain", "Result: my calculator type")));
                 });
         return syncResourceSpecification;
     }
