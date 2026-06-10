@@ -21,9 +21,12 @@ import io.modelcontextprotocol.spec.McpSchema.GetPromptResult;
 import io.modelcontextprotocol.spec.McpSchema.JsonSchema;
 import io.modelcontextprotocol.spec.McpSchema.Prompt;
 import io.modelcontextprotocol.spec.McpSchema.PromptArgument;
+import io.modelcontextprotocol.spec.McpSchema.PromptMessage;
 import io.modelcontextprotocol.spec.McpSchema.ReadResourceResult;
 import io.modelcontextprotocol.spec.McpSchema.Resource;
+import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.ServerCapabilities;
+import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 
 public class App {
@@ -152,7 +155,9 @@ public class App {
                         new PromptArgument("name", "description", true))),
                 (exchange, request) -> {
                     // Prompt implementation
-                    return new GetPromptResult(null, null);
+                    return new GetPromptResult("calculate", List.of(
+                        new PromptMessage(Role.USER, 
+                            new TextContent("use my Basic calculator to add, subtract, multiply, or divide two numbers"))));
                 });
         return syncPromptSpecification;
     }
