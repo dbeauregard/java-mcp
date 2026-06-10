@@ -92,6 +92,8 @@ public class App {
                     String operation = (String) request.arguments().get("operation");
                     int a = (int) request.arguments().get("a");
                     int b = (int) request.arguments().get("b");
+                    log.info("Tool Called with: {}, {}, {}.", operation, a, b);
+
                     // Tool implementation
                     String result = getResult(operation, a, b);
 
@@ -144,6 +146,8 @@ public class App {
                         .build(),
                 (exchange, request) -> {
                     // Resource read implementation
+                    log.info("Resource Called with: {}.", request.toString());
+
                     return new ReadResourceResult(List.of(new McpSchema.TextResourceContents("custom://resource", "text/plain", "Result: my calculator type")));
                 });
         return syncResourceSpecification;
@@ -155,6 +159,8 @@ public class App {
                         new PromptArgument("name", "description", true))),
                 (exchange, request) -> {
                     // Prompt implementation
+                    log.info("Prompt Called with: {}.", request.toString());
+
                     return new GetPromptResult("calculate", List.of(
                         new PromptMessage(Role.USER, 
                             new TextContent("use my Basic calculator to add, subtract, multiply, or divide two numbers"))));
