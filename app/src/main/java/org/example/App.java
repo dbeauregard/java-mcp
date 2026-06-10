@@ -106,7 +106,7 @@ public class App {
                     int a = (int) request.arguments().get("a");
                     int b = (int) request.arguments().get("b");
                     // Tool implementation
-                    String result = "these docs suck";
+                    String result = getResult(operation, a, b);
 
                     return CallToolResult.builder()
                             .content(List.of(new McpSchema.TextContent("Result: " + result)))
@@ -115,6 +115,16 @@ public class App {
                 .build();
         return syncToolSpecification;
     }
+
+    private String getResult(String operation, int a, int b) {
+    return switch (operation.toLowerCase()) {
+        case "add"      -> String.valueOf(a + b);
+        case "subtract" -> String.valueOf(a - b);
+        case "multiply" -> String.valueOf(a * b);
+        case "divide"   -> b == 0 ? "Error: Division by zero" : String.valueOf(a / b);
+        default         -> "Error: Invalid operation";
+    };
+}
 
     private SyncResourceSpecification createResourceSpec() {
         SyncResourceSpecification syncResourceSpecification = new McpServerFeatures.SyncResourceSpecification(
